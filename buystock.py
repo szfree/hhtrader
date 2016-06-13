@@ -97,9 +97,11 @@ def update(trader, stockbook):
 			ba += order['business_amount']
 
 			## 撤销“已报”和“部成”和“未报”的订单
-			## 0 -- 未报; 3--已报待撤 6 -- 已撤； 8 -- 已成； 需要检查部成的代号(可能是7) 和 已报（可能是2） 的代号
+			## 0 -- 未报; 3--已报待撤 6 -- 已撤； 8 -- 已成；2--已报 ； 7--部成， 需要检查部成的代号(可能是7) 和 已报（可能是2） 的代号
 			status = order['entrust_status']
-			if (status != '6') :
+
+			#except success and cancelled order, cancel all the other orders
+			if (status != '6') and (status != '8') :
 				print('entrust status: '+ order['entrust_status']+'; status name: '+order['status_name'])
 				result = input('Cancel order for '+ k + ', entrust amount is ' + str(order['entrust_amount']) + ', business amount is ' + str(order['business_amount']) +' (y/n)?')
 				if result == 'y':

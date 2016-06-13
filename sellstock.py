@@ -84,13 +84,15 @@ def update(trader, stockbook):
 			## 0 -- 未报; 3--已报待撤 6 -- 已撤； 8 -- 已成； 需要检查部成的代号(可能是7) 和 已报（可能是2） 的代号
 			status = order['entrust_status']
 			
-			print('entrust status: '+ order['entrust_status']+'; status name: '+order['status_name'])
-			result = input('Cancel order for '+ k + ', entrust amount is ' + str(order['entrust_amount']) + ', business amount is ' + str(order['business_amount']) +' (y/n)?')
-			if result == 'y':
-				trader.cancel_entrust(order['entrust_no'])	
+			#cancel all the orders except succeeded or cancelled.
+			if( status!='6') and (status!='8') :
+				print('entrust status: '+ order['entrust_status']+'; status name: '+order['status_name'])
+				result = input('Cancel order for '+ k + ', entrust amount is ' + str(order['entrust_amount']) + ', business amount is ' + str(order['business_amount']) +' (y/n)?')
+				if result == 'y':
+					trader.cancel_entrust(order['entrust_no'])	
 
 			
-		stockbook[k]['business_amount'] = ba
+		stockbook[str(k)]['business_amount'] = ba
 
 	return stockbook
 
