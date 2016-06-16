@@ -1,8 +1,8 @@
 import easytrader
 import easyquotation
 
-g_investment = 320000
-g_stocks = ['603333','600444','000593','600860','300371','300169','300260','300417','002738','600774','300268','000695','600810','000985','300107']
+g_investment = 1000000
+g_stocks = ['000715','002728','600243','300374','600883','002549','000759','603889','002034','601116','300280','000736','600505','600444','600792']
 
 
 
@@ -95,8 +95,6 @@ def update(trader, stockbook):
 		stockbook[str(k)]['business_amount'] = ba
 
 	return stockbook
-
-#finish process the orders
 def finished(stockbook):
 	for v in stockbook.values():
 		if v['total_amount'] > v['business_amount']:
