@@ -2,9 +2,12 @@ import easytrader
 import easyquotation
 
 g_investment = 1000000
-g_stocks = ['000715','002728','600243','300374','600883','002549','000759','603889','002034','601116','300280','000736','600505','600444','600792']
+#g_stocks = ['000715','002728','600243','300374','600883','002549','000759','603889','002034','601116','300280','000736','600505','600444','600792']
+g_stocks = ['300029','600099','300268','002193','002205','002627','600213','300344','300120','300330','000785','600448','600985','300405','600444']
 
+g_entrusts = []
 
+g_percent = 0.33 # sell percent for total amount
 
 def main():
 
@@ -34,7 +37,7 @@ def prepare(trader, ids):
 	for stock in stockdata:
 		if stock['stock_code'] in ids:
 			target = {}
-			target['total_amount'] = stock['enable_amount']
+			target['total_amount'] = stock['enable_amount'] * g_percent // 100 * 100
 			target['business_amount'] = 0
 			stockbook[ stock['stock_code'] ] = target
 	return stockbook
@@ -54,7 +57,8 @@ def sell(trader, quota, stockid, stocknum):
 			print('actual sell price is down more than 0.3%, skip selling!')
 			return
 
-		trader.sell(stockid, hq[stockid]['buy'], num)
+		entrust = trader.sell(stockid, hq[stockid]['buy'], num)
+		g_entrusts.append(entrust[0]['entrust_no'])
 
 def cancel(trader, order_id):
 	trader.cancel_entrust(order_id)
@@ -71,6 +75,10 @@ def update(trader, stockbook):
 		ba = 0 # business amount
 
 		for order in orders:
+
+			if order['entrust_no'] not in g_entrusts:
+				continue
+
 			if order['stock_code'] != str(k):
 				continue
 			
